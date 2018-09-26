@@ -43,25 +43,24 @@ def getindex(keyword):
         browser.find_element_by_id("schsubmit").click()
     time.sleep(1)
 
-    oneDaySelector = browser.find_element_by_class_name("chartselectHours")
-    oneDaySelector.click()
+    data_values = ['all', 'pc', 'wise']
+    indexs = []
+    for data_value in data_values:
+        data_value_selector = browser.find_element_by_xpath('//li[@data-value="' + data_value + '"]')
+        data_value_selector.click()
 
-    xoyelement = browser.find_elements_by_css_selector("#trend rect")[2]
-    num = 0
-    # 获得坐标长宽
-    x = xoyelement.location['x']
-    y = xoyelement.location['y']
-    width = xoyelement.size['width']
-    height = xoyelement.size['height']
-    print('开始获取指数')
+        oneDaySelector = browser.find_element_by_class_name("chartselectHours")
+        oneDaySelector.click()
 
-    x_0 = 21
-    y_0 = 150
-    index = []
-    times = []
-    day = 24
-    time.sleep(0.3)
-    try:
+        xoyelement = browser.find_elements_by_css_selector("#trend rect")[2]
+        print('开始获取指数——' + data_value)
+
+        x_0 = 21
+        y_0 = 150
+        index = []
+        times = []
+        day = 24
+        time.sleep(0.3)
         # webdriver.ActionChains(driver).move_to_element().click().perform()
         # 只有移动位置xoyelement[2]是准确的
         for i in tqdm(range(day)):
@@ -80,13 +79,9 @@ def getindex(keyword):
             # print(date_time.text)
             index.append(int(viewvalue.text.replace(',', '')))
             times.append(date_time.text)
+        indexs.append(index)
 
-
-    except Exception as err:
-        print(err)
-        print(num)
-
-    df = pd.DataFrame(data={'datetime': times, 'value': index})
+    df = pd.DataFrame(data={'all': indexs[0], 'pc': indexs[1], 'wise': indexs[2]}, index=times)
     df.to_csv(keyword + '.csv')
 
 
