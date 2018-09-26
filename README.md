@@ -1,7 +1,7 @@
 # baiduindex
 ## 环境需要:
 
-** python3 chromedriver pandas tqdm selenium**
+**python3 chromedriver pandas tqdm selenium**
 
 ---
 
